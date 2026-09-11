@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A0E17">
+<link rel="manifest" href="manifest.json">
+<title>Registro Stellare</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#0A0E17;
+  --panel:#121826;
+  --panel-2:#161D2E;
+  --border:#232C42;
+  --cyan:#5EEAD4;
+  --cyan-dim:#2C4A47;
+  --amber:#F5A742;
+  --amber-dim:#4A3A22;
+  --text:#E7EAF1;
+  --muted:#7C8499;
+  --danger:#E8676A;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(94,234,212,0.06), transparent 40%),
+    radial-gradient(ellipse at 90% 10%, rgba(245,167,66,0.05), transparent 35%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:640px;margin:0 auto;padding:20px 16px 80px;}
+
+header{margin-bottom:22px;}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.08em;
+  color:var(--cyan);
+  margin-bottom:6px;
+}
+h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:26px;
+  font-weight:700;
+  margin:0 0 4px;
+  letter-spacing:-0.01em;
+}
+.sub{color:var(--muted);font-size:13.5px;line-height:1.5;max-width:46ch;}
+
+.toolbar{display:flex;gap:8px;margin:20px 0 18px;}
+.search{
+  flex:1;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:10px 12px;
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+}
+.search::placeholder{color:var(--muted);}
+.search:focus{outline:none;border-color:var(--cyan-dim);}
+
+.btn{
+  border:none;
+  border-radius:9px;
+  padding:10px 16px;
+  font-family:'Inter',sans-serif;
+  font-weight:600;
+  font-size:13.5px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.btn-primary{background:var(--cyan);color:#08221F;}
+.btn-primary:active{transform:scale(0.98);}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-ghost:hover{border-color:var(--cyan-dim);}
+.btn-danger{background:transparent;color:var(--danger);border:1px solid rgba(232,103,106,0.3);}
+.btn-sm{padding:6px 10px;font-size:12.5px;border-radius:7px;}
+
+.empty{
+  border:1px dashed var(--border);
+  border-radius:12px;
+  padding:32px 20px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13.5px;
+}
+.empty b{color:var(--text);display:block;font-family:'Space Grotesk',sans-serif;font-size:16px;margin-bottom:6px;font-weight:600;}
+
+.system{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-left:3px solid var(--cyan);
+  border-radius:10px;
+  margin-bottom:12px;
+  overflow:hidden;
+}
+.system-head{
+  padding:14px 14px 14px 12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+}
+.system-head:hover{background:rgba(255,255,255,0.015);}
+.chev{
+  color:var(--muted);
+  font-size:12px;
+  transition:transform 0.15s ease;
+  flex-shrink:0;
+  width:10px;
+}
+.system.open .chev{transform:rotate(90deg);}
+.system-name{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:600;
+  font-size:15.5px;
+}
+.system-meta{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:3px;
+}
+.system-count{
+  margin-left:auto;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--cyan);
+  background:var(--cyan-dim);
+  padding:3px 8px;
+  border-radius:20px;
+  flex-shrink:0;
+}
+
+.system-body{display:none;padding:0 14px 14px 15px;}
+.system.open .system-body{display:block;}
+.system-notes{color:var(--muted);font-size:13px;line-height:1.5;margin:0 0 12px;padding-left:14px;}
+
+.loc{
+  border-left:2px solid var(--amber);
+  background:var(--panel-2);
+  border-radius:0 8px 8px 0;
+  padding:11px 12px;
+  margin-bottom:8px;
+}
+.loc-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.loc-name{font-weight:600;font-size:14px;}
+.loc-type{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  color:var(--amber);
+  background:var(--amber-dim);
+  padding:2px 7px;
+  border-radius:20px;
+}
+.loc-planet{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);}
+.loc-row{margin-top:7px;font-size:12.5px;}
+.loc-label{color:var(--muted);margin-right:6px;}
+.tags{display:inline-flex;flex-wrap:wrap;gap:5px;vertical-align:middle;}
+.tag{
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  padding:2px 8px;
+  border-radius:20px;
+  font-size:12px;
+}
+.tag.sell{border-color:rgba(245,167,66,0.35);}
+.tag.hit{background:var(--cyan);color:#08221F;border-color:var(--cyan);font-weight:600;}
+.tag.sell.hit{background:var(--amber);color:#2B1C08;border-color:var(--amber);}
+.loc-notes{color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.4;}
+.loc-actions{display:flex;gap:6px;margin-top:9px;}
+
+.results-heading{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  color:var(--muted);
+  margin:0 0 12px 2px;
+}
+.result-loc{
+  border-left:2px solid var(--amber);
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  border-left:3px solid var(--amber);
+  border-radius:10px;
+  padding:12px 13px;
+  margin-bottom:10px;
+}
+.result-breadcrumb{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--cyan);
+  margin-bottom:6px;
+}
+.result-breadcrumb span{color:var(--muted);margin:0 4px;}
+
+.add-loc-row{margin-top:4px;padding-left:14px;display:flex;gap:6px;flex-wrap:wrap;}
+
+.footer-actions{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap;}
+.footer-actions .btn{flex:1;}
+.save-flash{
+  position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--cyan);color:#08221F;font-size:12.5px;font-weight:600;
+  padding:8px 16px;border-radius:20px;opacity:0;transition:all 0.25s ease;pointer-events:none;
+}
+.save-flash.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Modal */
+.modal-bg{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(5,7,12,0.75);
+  backdrop-filter:blur(2px);
+  z-index:50;
+  align-items:flex-end;
+  justify-content:center;
+}
+.modal-bg.show{display:flex;}
+.modal{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px 16px 0 0;
+  width:100%;
+  max-width:640px;
+  max-height:88vh;
+  overflow-y:auto;
+  padding:20px 18px 24px;
+  animation:slideup 0.2s ease;
+}
+@keyframes slideup{from{transform:translateY(16px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal h2{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:17px;
+  margin:0 0 16px;
+  font-weight:600;
+}
+.field{margin-bottom:13px;}
+.field label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:5px;
+  font-family:'IBM Plex Mono',monospace;
+}
+.field input, .field textarea, .field select{
+  width:100%;
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px 11px;
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+}
+.field textarea{resize:vertical;min-height:50px;}
+.field input:focus, .field textarea:focus, .field select:focus{outline:none;border-color:var(--cyan-dim);}
+.field-hint{font-size:11px;color:var(--muted);margin-top:4px;}
+.modal-actions{display:flex;gap:8px;margin-top:18px;}
+.modal-actions .btn{flex:1;}
+
+@media (min-width:480px){
+  h1{font-size:29px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">REGISTRO DI ESPLORAZIONE</div>
+    <h1>Registro Stellare</h1>
+    <p class="sub">Ogni sistema, base e avamposto che hai colonizzato — cosa produce, cosa vende, dove trovarlo di nuovo.</p>
+  </header>
+
+  <div class="toolbar">
+    <input class="search" id="search" placeholder="Cerca un materiale, es. Titanio…" oninput="render()">
+    <button class="btn btn-primary" onclick="openSystemModal()">+ Sistema</button>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="footer-actions">
+    <button class="btn btn-ghost" onclick="exportData()">Esporta backup (JSON)</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">Importa backup</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)">
+  </div>
+</div>
+
+<div class="save-flash" id="saveFlash">Salvato</div>
+
+<!-- System modal -->
+<div class="modal-bg" id="sysModalBg">
+  <div class="modal">
+    <h2 id="sysModalTitle">Nuovo sistema</h2>
+    <div class="field">
+      <label>Nome sistema</label>
+      <input id="sysName" placeholder="es. Eissentam Prime">
+    </div>
+    <div class="field">
+      <label>Galassia / regione</label>
+      <input id="sysGalaxy" placeholder="es. Euclide — Hilbert Dimension">
+    </div>
+    <div class="field">
+      <label>Note</label>
+      <textarea id="sysNotes" placeholder="Economia del sistema, razza dominante, distanza dallo spawn, coordinate portale…"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSystemModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="saveSystem()">Salva sistema</button>
+    </div>
+  </div>
+</div>
+
+<!-- Location modal -->
+<div class="modal-bg" id="locModalBg">
+  <div class="modal">
+    <h2 id="locModalTitle">Nuova base</h2>
+    <div class="field">
+      <label>Nome</label>
+      <input id="locName" placeholder="es. Avamposto del Titanio">
+    </div>
+    <div class="field">
+      <label>Tipo</label>
+      <select id="locType">
+        <option value="base">Base</option>
+        <option value="avamposto">Avamposto</option>
+        <option value="stazione">Stazione / terminal commerciale</option>
+        <option value="farm">Farm / bioma coltivato</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Pianeta / luna</label>
+      <input id="locPlanet" placeholder="es. Xarrow VI">
+    </div>
+    <div class="field">
+      <label>Produce</label>
+      <input id="locProduces" placeholder="es. Ferrite pura, Di-idrogeno, Gamma Root">
+      <div class="field-hint">Separati da virgola</div>
+    </div>
+    <div class="field">
+      <label>Vende / specialità commerciale</label>
+      <input id="locSells" placeholder="es. Tecnologia esotica, Circuit Board">
+      <div class="field-hint">Separati da virgola</div>
+    </div>
+    <div class="field">
+      <label>Note</label>
+      <textarea id="locNotes" placeholder="Hotspot minerario, teletrasporto collegato, indirizzo portale…"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeLocModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="saveLoc()">Salva</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'nms-registro-stellare-data';
+let data = { systems: [] };
+let openIds = new Set();
+let editingSystemId = null;
+let editingLoc = null;
+
+const TYPE_LABELS = { base:'Base', avamposto:'Avamposto', stazione:'Stazione', farm:'Farm' };
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) data = JSON.parse(raw);
+  }catch(e){ console.error('Lettura dati fallita', e); }
+  render();
+}
+
+function persist(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    flashSaved();
+  }catch(e){
+    alert('Salvataggio fallito: memoria del browser piena o non disponibile.');
+  }
+}
+
+function flashSaved(){
+  const el = document.getElementById('saveFlash');
+  el.classList.add('show');
+  clearTimeout(window._flashTimer);
+  window._flashTimer = setTimeout(()=>el.classList.remove('show'), 900);
+}
+
+function exportData(){
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'registro-stellare-backup.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const imported = JSON.parse(reader.result);
+      if(!imported.systems) throw new Error('formato non valido');
+      if(data.systems.length && !confirm('Questo sostituirà i dati attuali con quelli del backup. Continuare?')) return;
+      data = imported;
+      persist(); render();
+    }catch(e){
+      alert('File non valido.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+function openSystemModal(id){
+  editingSystemId = id || null;
+  const sys = id ? data.systems.find(s=>s.id===id) : null;
+  document.getElementById('sysModalTitle').textContent = sys ? 'Modifica sistema' : 'Nuovo sistema';
+  document.getElementById('sysName').value = sys ? sys.name : '';
+  document.getElementById('sysGalaxy').value = sys ? sys.galaxy : '';
+  document.getElementById('sysNotes').value = sys ? sys.notes : '';
+  document.getElementById('sysModalBg').classList.add('show');
+}
+function closeSystemModal(){ document.getElementById('sysModalBg').classList.remove('show'); }
+
+function saveSystem(){
+  const name = document.getElementById('sysName').value.trim();
+  if(!name) return;
+  const galaxy = document.getElementById('sysGalaxy').value.trim();
+  const notes = document.getElementById('sysNotes').value.trim();
+  if(editingSystemId){
+    const sys = data.systems.find(s=>s.id===editingSystemId);
+    sys.name=name; sys.galaxy=galaxy; sys.notes=notes;
+  }else{
+    const id = uid();
+    data.systems.push({ id, name, galaxy, notes, locations: [] });
+    openIds.add(id);
+  }
+  closeSystemModal();
+  persist(); render();
+}
+
+function deleteSystem(id){
+  if(!confirm('Eliminare questo sistema e tutte le sue basi?')) return;
+  data.systems = data.systems.filter(s=>s.id!==id);
+  persist(); render();
+}
+
+function openLocModal(systemId, locId){
+  editingLoc = { systemId, locId: locId || null };
+  const sys = data.systems.find(s=>s.id===systemId);
+  const loc = locId ? sys.locations.find(l=>l.id===locId) : null;
+  document.getElementById('locModalTitle').textContent = loc ? 'Modifica base' : 'Nuova base / avamposto';
+  document.getElementById('locName').value = loc ? loc.name : '';
+  document.getElementById('locType').value = loc ? loc.type : 'base';
+  document.getElementById('locPlanet').value = loc ? loc.planet : '';
+  document.getElementById('locProduces').value = loc ? loc.produces.join(', ') : '';
+  document.getElementById('locSells').value = loc ? loc.sells.join(', ') : '';
+  document.getElementById('locNotes').value = loc ? loc.notes : '';
+  document.getElementById('locModalBg').classList.add('show');
+}
+function closeLocModal(){ document.getElementById('locModalBg').classList.remove('show'); }
+
+function splitTags(str){
+  return str.split(',').map(s=>s.trim()).filter(Boolean);
+}
+
+function saveLoc(){
+  const name = document.getElementById('locName').value.trim();
+  if(!name) return;
+  const sys = data.systems.find(s=>s.id===editingLoc.systemId);
+  const loc = {
+    id: editingLoc.locId || uid(),
+    name,
+    type: document.getElementById('locType').value,
+    planet: document.getElementById('locPlanet').value.trim(),
+    produces: splitTags(document.getElementById('locProduces').value),
+    sells: splitTags(document.getElementById('locSells').value),
+    notes: document.getElementById('locNotes').value.trim()
+  };
+  if(editingLoc.locId){
+    const idx = sys.locations.findIndex(l=>l.id===editingLoc.locId);
+    sys.locations[idx] = loc;
+  }else{
+    sys.locations.push(loc);
+  }
+  closeLocModal();
+  persist(); render();
+}
+
+function deleteLoc(systemId, locId){
+  if(!confirm('Eliminare questa base/avamposto?')) return;
+  const sys = data.systems.find(s=>s.id===systemId);
+  sys.locations = sys.locations.filter(l=>l.id!==locId);
+  persist(); render();
+}
+
+function toggleSystem(id){
+  if(openIds.has(id)) openIds.delete(id); else openIds.add(id);
+  render();
+}
+
+function locMatches(loc, q){
+  return loc.name.toLowerCase().includes(q) ||
+    loc.planet.toLowerCase().includes(q) ||
+    loc.notes.toLowerCase().includes(q) ||
+    loc.produces.some(p=>p.toLowerCase().includes(q)) ||
+    loc.sells.some(p=>p.toLowerCase().includes(q));
+}
+
+function esc(s){
+  return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function tagHtml(items, cls, q){
+  return items.map(p=>{
+    const hit = q && p.toLowerCase().includes(q);
+    return `<span class="tag ${cls}${hit?' hit':''}">${esc(p)}</span>`;
+  }).join('');
+}
+
+function renderResultLoc(sys, loc, q){
+  return `
+    <div class="result-loc">
+      <div class="result-breadcrumb">${esc(sys.name)}${sys.galaxy?` <span>·</span> ${esc(sys.galaxy)}`:''}</div>
+      <div class="loc-top">
+        <span class="loc-name">${esc(loc.name)}</span>
+        <span class="loc-type">${TYPE_LABELS[loc.type]||loc.type}</span>
+        ${loc.planet ? `<span class="loc-planet">${esc(loc.planet)}</span>` : ''}
+      </div>
+      ${loc.produces.length ? `<div class="loc-row"><span class="loc-label">Produce</span><span class="tags">${tagHtml(loc.produces,'',q)}</span></div>` : ''}
+      ${loc.sells.length ? `<div class="loc-row"><span class="loc-label">Vende</span><span class="tags">${tagHtml(loc.sells,'sell',q)}</span></div>` : ''}
+      ${loc.notes ? `<div class="loc-notes">${esc(loc.notes)}</div>` : ''}
+      <div class="loc-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openLocModal('${sys.id}','${loc.id}')">Modifica</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteLoc('${sys.id}','${loc.id}')">Elimina</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderSearchResults(qRaw){
+  const q = qRaw.toLowerCase();
+  const list = document.getElementById('list');
+  const hits = [];
+  data.systems.forEach(sys=>{
+    sys.locations.forEach(loc=>{
+      if(locMatches(loc,q)) hits.push({sys,loc});
+    });
+  });
+  // sistemi che matchano solo per nome/galassia/note, senza basi corrispondenti
+  const sysOnlyHits = data.systems.filter(sys=>
+    !sys.locations.some(l=>locMatches(l,q)) &&
+    (sys.name.toLowerCase().includes(q) || sys.galaxy.toLowerCase().includes(q) || sys.notes.toLowerCase().includes(q))
+  );
+
+  if(hits.length===0 && sysOnlyHits.length===0){
+    list.innerHTML = `<div class="empty"><b>Nessun risultato</b>Nessuna base o sistema corrisponde a "${esc(qRaw)}".</div>`;
+    return;
+  }
+
+  let html = '';
+  if(hits.length){
+    html += `<p class="results-heading">${hits.length} ${hits.length===1?'base trovata':'basi trovate'} per "${esc(qRaw)}"</p>`;
+    html += hits.map(({sys,loc})=>renderResultLoc(sys,loc,q)).join('');
+  }
+  if(sysOnlyHits.length){
+    html += sysOnlyHits.map(sys=>`
+      <div class="result-loc" style="border-left-color:var(--cyan)">
+        <div class="result-breadcrumb">Sistema</div>
+        <div class="loc-top"><span class="loc-name">${esc(sys.name)}</span></div>
+        ${sys.notes ? `<div class="loc-notes">${esc(sys.notes)}</div>` : ''}
+      </div>
+    `).join('');
+  }
+  list.innerHTML = html;
+}
+
+function render(){
+  const q = document.getElementById('search').value.trim();
+  const list = document.getElementById('list');
+
+  if(data.systems.length===0){
+    list.innerHTML = `<div class="empty"><b>Nessun sistema ancora registrato</b>Aggiungi il tuo primo sistema per iniziare a tracciare basi, avamposti e commercio.</div>`;
+    return;
+  }
+
+  if(q){
+    renderSearchResults(q);
+    return;
+  }
+
+  list.innerHTML = data.systems.map(sys=>{
+    const isOpen = openIds.has(sys.id);
+    const locsHtml = sys.locations.map(loc=>`
+      <div class="loc">
+        <div class="loc-top">
+          <span class="loc-name">${esc(loc.name)}</span>
+          <span class="loc-type">${TYPE_LABELS[loc.type]||loc.type}</span>
+          ${loc.planet ? `<span class="loc-planet">${esc(loc.planet)}</span>` : ''}
+        </div>
+        ${loc.produces.length ? `<div class="loc-row"><span class="loc-label">Produce</span><span class="tags">${loc.produces.map(p=>`<span class="tag">${esc(p)}</span>`).join('')}</span></div>` : ''}
+        ${loc.sells.length ? `<div class="loc-row"><span class="loc-label">Vende</span><span class="tags">${loc.sells.map(p=>`<span class="tag sell">${esc(p)}</span>`).join('')}</span></div>` : ''}
+        ${loc.notes ? `<div class="loc-notes">${esc(loc.notes)}</div>` : ''}
+        <div class="loc-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openLocModal('${sys.id}','${loc.id}')">Modifica</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteLoc('${sys.id}','${loc.id}')">Elimina</button>
+        </div>
+      </div>
+    `).join('');
+
+    return `
+      <div class="system ${isOpen?'open':''}">
+        <div class="system-head" onclick="toggleSystem('${sys.id}')">
+          <span class="chev">▸</span>
+          <div>
+            <div class="system-name">${esc(sys.name)}</div>
+            ${sys.galaxy ? `<div class="system-meta">${esc(sys.galaxy)}</div>` : ''}
+          </div>
+          <span class="system-count">${sys.locations.length}</span>
+        </div>
+        <div class="system-body">
+          ${sys.notes ? `<p class="system-notes">${esc(sys.notes)}</p>` : ''}
+          ${locsHtml}
+          <div class="add-loc-row">
+            <button class="btn btn-ghost btn-sm" onclick="openLocModal('${sys.id}')">+ Aggiungi base / avamposto</button>
+            <button class="btn btn-ghost btn-sm" onclick="openSystemModal('${sys.id}')">Modifica sistema</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteSystem('${sys.id}')">Elimina sistema</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>
