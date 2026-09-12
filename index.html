@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0A0E17">
 <link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Registro Stellare</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
@@ -33,10 +35,69 @@ body{
   font-family:'Inter',sans-serif;
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
+  position:relative;
 }
-.wrap{max-width:640px;margin:0 auto;padding:20px 16px 80px;}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(to bottom, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+  z-index:1;
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 8% 18%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 32% 68%, #ffffff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 52% 12%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 71% 52%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 87% 22%, #ffffff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 14% 84%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 43% 38%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 62% 91%, #ffffff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 94% 63%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 24% 48%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 78% 78%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 5% 60%, #ffffff 100%, transparent);
+  background-repeat:repeat;
+  background-size:320px 320px;
+  opacity:0.45;
+}
+.sweep{
+  position:fixed;top:0;left:0;width:100%;height:2px;z-index:5;pointer-events:none;
+  background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+  background-size:200% 100%;
+  opacity:0.55;
+  animation:sweep 7s linear infinite;
+}
+@keyframes sweep{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
+}
+.wrap{max-width:640px;margin:0 auto;padding:20px 16px 80px;position:relative;z-index:2;}
 
-header{margin-bottom:22px;}
+.brand-row{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+.brand-icon{width:38px;height:38px;filter:drop-shadow(0 0 8px rgba(94,234,212,0.45));flex-shrink:0;}
+.eyebrow::before{content:'◈ ';color:var(--cyan);}
+
+header{margin-bottom:22px;padding-bottom:16px;position:relative;}
+header::before{
+  content:'';
+  position:absolute;top:-6px;left:-6px;
+  width:20px;height:20px;
+  border-top:2px solid var(--amber);
+  border-left:2px solid var(--amber);
+  opacity:0.75;
+}
+header::after{
+  content:'';
+  position:absolute;left:0;bottom:0;width:72px;height:2px;
+  background:linear-gradient(90deg,var(--cyan),transparent);
+  box-shadow:0 0 8px var(--cyan);
+}
 .eyebrow{
   font-family:'IBM Plex Mono',monospace;
   font-size:11px;
@@ -77,7 +138,7 @@ h1{
   cursor:pointer;
   white-space:nowrap;
 }
-.btn-primary{background:var(--cyan);color:#08221F;}
+.btn-primary{background:var(--cyan);color:#08221F;box-shadow:0 0 16px -3px rgba(94,234,212,0.6);}
 .btn-primary:active{transform:scale(0.98);}
 .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
 .btn-ghost:hover{border-color:var(--cyan-dim);}
@@ -86,11 +147,28 @@ h1{
 
 .empty{
   border:1px dashed var(--border);
-  border-radius:12px;
-  padding:32px 20px;
+  padding:52px 20px 32px;
   text-align:center;
   color:var(--muted);
   font-size:13.5px;
+  position:relative;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+.empty::before{
+  content:'';
+  position:absolute;top:16px;left:50%;transform:translateX(-50%);
+  width:30px;height:30px;
+  border:1.5px solid var(--cyan-dim);
+  border-radius:50%;
+  box-shadow:0 0 0 9px rgba(94,234,212,0.05), 0 0 18px -3px rgba(94,234,212,0.4);
+}
+.empty::after{
+  content:'';
+  position:absolute;top:30px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;
+  background:var(--cyan);
+  border-radius:50%;
+  box-shadow:0 0 6px var(--cyan);
 }
 .empty b{color:var(--text);display:block;font-family:'Space Grotesk',sans-serif;font-size:16px;margin-bottom:6px;font-weight:600;}
 
@@ -98,9 +176,10 @@ h1{
   background:var(--panel);
   border:1px solid var(--border);
   border-left:3px solid var(--cyan);
-  border-radius:10px;
   margin-bottom:12px;
   overflow:hidden;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  box-shadow:0 0 20px -12px rgba(94,234,212,0.4);
 }
 .system-head{
   padding:14px 14px 14px 12px;
@@ -139,6 +218,7 @@ h1{
   border-radius:20px;
   flex-shrink:0;
 }
+.system-count::before{content:'◆ ';font-size:8px;}
 
 .system-body{display:none;padding:0 14px 14px 15px;}
 .system.open .system-body{display:block;}
@@ -147,9 +227,9 @@ h1{
 .loc{
   border-left:2px solid var(--amber);
   background:var(--panel-2);
-  border-radius:0 8px 8px 0;
   padding:11px 12px;
   margin-bottom:8px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
 }
 .loc-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
 .loc-name{font-weight:600;font-size:14px;}
@@ -161,6 +241,7 @@ h1{
   padding:2px 7px;
   border-radius:20px;
 }
+.loc-type::before{content:'◆ ';font-size:7px;}
 .loc-planet{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);}
 .loc-row{margin-top:7px;font-size:12.5px;}
 .loc-label{color:var(--muted);margin-right:6px;}
@@ -185,13 +266,12 @@ h1{
   margin:0 0 12px 2px;
 }
 .result-loc{
-  border-left:2px solid var(--amber);
   background:var(--panel-2);
   border:1px solid var(--border);
   border-left:3px solid var(--amber);
-  border-radius:10px;
   padding:12px 13px;
   margin-bottom:10px;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
 }
 .result-breadcrumb{
   font-family:'IBM Plex Mono',monospace;
@@ -265,22 +345,139 @@ h1{
 .modal-actions{display:flex;gap:8px;margin-top:18px;}
 .modal-actions .btn{flex:1;}
 
+/* Guide di crafting */
+.guide-panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-left:3px solid var(--amber);
+  margin-bottom:14px;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  box-shadow:0 0 20px -10px rgba(245,167,66,0.4);
+}
+.guide-head{padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;}
+.guide-head:hover{background:rgba(255,255,255,0.015);}
+.guide-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;}
+.guide-value{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber);margin-top:2px;}
+.guide-body{display:none;padding:0 14px 16px;}
+.guide-panel.open .guide-body{display:block;}
+.guide-panel.open .chev{transform:rotate(90deg);}
+.guide-note{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);margin:0 0 10px;}
+.qty-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.qty-row label{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
+.qty-row input{
+  width:70px;background:var(--panel-2);border:1px solid var(--border);
+  color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;
+  padding:7px 9px;text-align:center;
+}
+.qty-row input:focus{outline:none;border-color:var(--amber-dim);}
+.guide-steps{font-size:13px;line-height:1.6;color:var(--text);margin-bottom:6px;}
+.guide-steps b{font-family:'Space Grotesk',sans-serif;color:var(--cyan);display:block;margin-top:12px;font-size:13.5px;}
+.guide-steps ul{margin:6px 0 0;padding-left:18px;color:var(--muted);}
+.guide-steps li{margin-bottom:6px;}
+.matline{
+  display:flex;align-items:flex-start;gap:10px;
+  border:1px solid var(--border);
+  padding:9px 11px;
+  margin-top:7px;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+.matline input[type=checkbox]{width:18px;height:18px;margin-top:1px;flex-shrink:0;accent-color:var(--cyan);}
+.matline.done{opacity:0.45;}
+.matline.done .mat-name{text-decoration:line-through;}
+.mat-name{font-weight:600;font-size:13.5px;}
+.mat-qty{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:12px;margin-left:6px;}
+.mat-locs{font-size:11.5px;color:var(--muted);margin-top:3px;font-family:'IBM Plex Mono',monospace;}
+.mat-locs b{color:var(--cyan);font-family:'Inter',sans-serif;font-weight:600;}
+.mat-locs.none{color:var(--danger);}
+
 @media (min-width:480px){
   h1{font-size:29px;}
 }
 </style>
 </head>
 <body>
+<div class="sweep"></div>
 <div class="wrap">
   <header>
-    <div class="eyebrow">REGISTRO DI ESPLORAZIONE</div>
-    <h1>Registro Stellare</h1>
+    <div class="brand-row">
+      <img src="icon-192.png" alt="" class="brand-icon">
+      <div>
+        <div class="eyebrow">REGISTRO DI ESPLORAZIONE</div>
+        <h1>Registro Stellare</h1>
+      </div>
+    </div>
     <p class="sub">Ogni sistema, base e avamposto che hai colonizzato — cosa produce, cosa vende, dove trovarlo di nuovo.</p>
   </header>
 
   <div class="toolbar">
     <input class="search" id="search" placeholder="Cerca un materiale, es. Titanio…" oninput="render()">
     <button class="btn btn-primary" onclick="openSystemModal()">+ Sistema</button>
+  </div>
+
+  <div class="guide-panel" id="guide-stasis">
+    <div class="guide-head" onclick="toggleGuide('stasis')">
+      <span class="chev" id="chev-stasis">▸</span>
+      <div>
+        <div class="guide-title">Dispositivo di Stasi</div>
+        <div class="guide-value">15.600.000 unità</div>
+      </div>
+    </div>
+    <div class="guide-body" id="body-stasis">
+      <p class="guide-note">Processore Quantico + Camera Criogenica + Iridesite</p>
+      <div class="qty-row">
+        <label>Unità da produrre</label>
+        <input type="number" id="qty-input-stasis" value="1" min="1" oninput="updateQty('stasis', this.value)">
+      </div>
+      <div class="guide-steps">
+        <b>Processore Quantico</b> = Circuito Stampato + Superconduttore
+        <ul>
+          <li>Circuito Stampato = Condensato Termico (100 Cristallo Gelido + 200 Solanio) + Polifibra (100 Carne di Cactus + 200 Bulbo Stellare)</li>
+          <li>Superconduttore = Carbonio Arricchito (250 Radon + 50 Carbonio Condensato) + Semiconduttore [Condensato Termico (250 Solforina + 50 Carbonio Condensato) + Sale di Azoto (250 Azoto + 50 Carbonio Condensato)]</li>
+        </ul>
+        <b>Camera Criogenica</b> = Vetro Vivente + Crio-Pompa
+        <ul>
+          <li>Vetro Vivente = Vetro (200 Cristallo Gelido) + Lubrificante (50 Fecio + 400 Erba Gamma)</li>
+          <li>Crio-Pompa = Ghiaccio Caldo [Carbonio Arricchito (250 Radon + 50 Carbonio Condensato) + Sale di Azoto (250 Azoto + 50 Carbonio Condensato)] + Condensato Termico (250 Solforina + 50 Carbonio Condensato)</li>
+        </ul>
+        <b>Iridesite</b> = Aronio + Oro Magno + Grantino
+        <ul>
+          <li>Aronio (50 Paraffinio + 50 Cobalto Ionizzato), Oro Magno (50 Fosforo + 50 Cobalto Ionizzato), Grantino (50 Dioxite + 50 Cobalto Ionizzato)</li>
+        </ul>
+      </div>
+      <p class="results-heading">Materiali totali — spunta quello che hai già raccolto</p>
+      <div id="matlist-stasis"></div>
+    </div>
+  </div>
+
+  <div class="guide-panel" id="guide-fusion">
+    <div class="guide-head" onclick="toggleGuide('fusion')">
+      <span class="chev" id="chev-fusion">▸</span>
+      <div>
+        <div class="guide-title">Attivatore di Fusione</div>
+        <div class="guide-value">15.600.000 unità</div>
+      </div>
+    </div>
+    <div class="guide-body" id="body-fusion">
+      <p class="guide-note">Reattore Portatile + Processore Quantico + Geodesite</p>
+      <div class="qty-row">
+        <label>Unità da produrre</label>
+        <input type="number" id="qty-input-fusion" value="1" min="1" oninput="updateQty('fusion', this.value)">
+      </div>
+      <div class="guide-steps">
+        <b>Reattore Portatile</b> = Esplosivo Liquido + Accelerante di Fusione
+        <ul>
+          <li>Esplosivo Liquido = Acido (25 Mordite + 600 Muffa Fungina) + Gel Instabile (200 Carne di Cactus)</li>
+          <li>Accelerante di Fusione = Sale di Azoto (250 Azoto + 50 Carbonio Condensato) + Catalizzatore Organico [Condensato Termico (250 Solforina + 50 Carbonio Condensato) + Carbonio Arricchito (250 Radon + 50 Carbonio Condensato)]</li>
+        </ul>
+        <b>Processore Quantico</b> = Circuito Stampato + Superconduttore (identico a quello del Dispositivo di Stasi, vedi sopra)
+        <b>Geodesite</b> = Herox + Lemmium + Bronzo Sporco
+        <ul>
+          <li>Herox (50 Cobalto Ionizzato + 50 Ammoniaca), Lemmium (50 Uranio + 100 Ferrite Pura), Bronzo Sporco (50 Pirite + 100 Ferrite Pura)</li>
+        </ul>
+      </div>
+      <p class="results-heading">Materiali totali — spunta quello che hai già raccolto</p>
+      <div id="matlist-fusion"></div>
+    </div>
   </div>
 
   <div id="list"></div>
@@ -330,6 +527,7 @@ h1{
       <select id="locType">
         <option value="base">Base</option>
         <option value="avamposto">Avamposto</option>
+        <option value="insediamento">Insediamento</option>
         <option value="stazione">Stazione / terminal commerciale</option>
         <option value="farm">Farm / bioma coltivato</option>
       </select>
@@ -366,13 +564,14 @@ let openIds = new Set();
 let editingSystemId = null;
 let editingLoc = null;
 
-const TYPE_LABELS = { base:'Base', avamposto:'Avamposto', stazione:'Stazione', farm:'Farm' };
+const TYPE_LABELS = { base:'Base', avamposto:'Avamposto', insediamento:'Insediamento', stazione:'Stazione', farm:'Farm' };
 
 function loadData(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     if(raw) data = JSON.parse(raw);
   }catch(e){ console.error('Lettura dati fallita', e); }
+  loadCraftProgress();
   render();
 }
 
@@ -452,7 +651,8 @@ function saveSystem(){
 }
 
 function deleteSystem(id){
-  if(!confirm('Eliminare questo sistema e tutte le sue basi?')) return;
+  const sys = data.systems.find(s=>s.id===id);
+  if(!confirm(`Vuoi davvero eliminare il sistema "${sys.name}" e tutte le sue basi? L'operazione non si può annullare.`)) return;
   data.systems = data.systems.filter(s=>s.id!==id);
   persist(); render();
 }
@@ -500,8 +700,9 @@ function saveLoc(){
 }
 
 function deleteLoc(systemId, locId){
-  if(!confirm('Eliminare questa base/avamposto?')) return;
   const sys = data.systems.find(s=>s.id===systemId);
+  const loc = sys.locations.find(l=>l.id===locId);
+  if(!confirm(`Vuoi davvero eliminare "${loc.name}"? L'operazione non si può annullare.`)) return;
   sys.locations = sys.locations.filter(l=>l.id!==locId);
   persist(); render();
 }
@@ -509,6 +710,119 @@ function deleteLoc(systemId, locId){
 function toggleSystem(id){
   if(openIds.has(id)) openIds.delete(id); else openIds.add(id);
   render();
+}
+
+let craftProgress = {};
+let craftQty = { stasis: 1, fusion: 1 };
+function loadCraftProgress(){
+  try{
+    const raw = localStorage.getItem('nms-craft-progress');
+    if(raw) craftProgress = JSON.parse(raw);
+  }catch(e){}
+  try{
+    const rawQty = localStorage.getItem('nms-craft-qty');
+    if(rawQty) craftQty = Object.assign(craftQty, JSON.parse(rawQty));
+  }catch(e){}
+  document.getElementById('qty-input-stasis').value = craftQty.stasis;
+  document.getElementById('qty-input-fusion').value = craftQty.fusion;
+}
+function saveCraftProgress(){
+  try{ localStorage.setItem('nms-craft-progress', JSON.stringify(craftProgress)); }catch(e){}
+}
+function saveCraftQty(){
+  try{ localStorage.setItem('nms-craft-qty', JSON.stringify(craftQty)); }catch(e){}
+}
+function updateQty(key, val){
+  let n = parseInt(val, 10);
+  if(!n || n < 1) n = 1;
+  craftQty[key] = n;
+  saveCraftQty();
+  renderMatList(key);
+}
+
+const RECIPES = {
+  stasis: [
+    { name:"Cristallo Gelido", qty:300 },
+    { name:"Solanio", qty:200 },
+    { name:"Carne di Cactus", qty:100 },
+    { name:"Bulbo Stellare", qty:200 },
+    { name:"Radon", qty:500 },
+    { name:"Carbonio Condensato", qty:300 },
+    { name:"Solforina", qty:500 },
+    { name:"Azoto", qty:500 },
+    { name:"Fecio", qty:50 },
+    { name:"Erba Gamma", qty:400 },
+    { name:"Paraffinio", qty:50 },
+    { name:"Cobalto Ionizzato", qty:150 },
+    { name:"Fosforo", qty:50 },
+    { name:"Dioxite", qty:50 }
+  ],
+  fusion: [
+    { name:"Muffa Fungina", qty:600 },
+    { name:"Solforina", qty:500 },
+    { name:"Radon", qty:500 },
+    { name:"Azoto", qty:500 },
+    { name:"Carne di Cactus", qty:300 },
+    { name:"Carbonio Condensato", qty:300 },
+    { name:"Solanio", qty:200 },
+    { name:"Bulbo Stellare", qty:200 },
+    { name:"Ferrite Pura", qty:200 },
+    { name:"Cristallo Gelido", qty:100 },
+    { name:"Pirite", qty:50 },
+    { name:"Ammoniaca", qty:50 },
+    { name:"Cobalto Ionizzato", qty:50 },
+    { name:"Uranio", qty:50 },
+    { name:"Mordite", qty:25 }
+  ]
+};
+
+function toggleGuide(key){
+  const panel = document.getElementById('guide-'+key);
+  const isOpen = panel.classList.toggle('open');
+  if(isOpen) renderMatList(key);
+}
+
+function toggleMat(key, matName){
+  if(!craftProgress[key]) craftProgress[key] = {};
+  craftProgress[key][matName] = !craftProgress[key][matName];
+  saveCraftProgress();
+  renderMatList(key);
+}
+
+function findLocationsFor(matName){
+  const q = matName.toLowerCase();
+  const hits = [];
+  data.systems.forEach(sys=>{
+    sys.locations.forEach(loc=>{
+      const inProd = loc.produces.some(p=>p.toLowerCase().includes(q));
+      const inSell = loc.sells.some(p=>p.toLowerCase().includes(q));
+      if(inProd || inSell) hits.push(`${sys.name} — ${loc.name}`);
+    });
+  });
+  return hits;
+}
+
+function renderMatList(key){
+  const box = document.getElementById('matlist-'+key);
+  const progress = craftProgress[key] || {};
+  const mult = craftQty[key] || 1;
+  box.innerHTML = RECIPES[key].map(m=>{
+    const done = !!progress[m.name];
+    const locs = findLocationsFor(m.name);
+    const totalQty = (m.qty * mult).toLocaleString('it-IT');
+    const locsHtml = locs.length
+      ? `<div class="mat-locs"><b>Trovato in:</b> ${locs.map(esc).join(' · ')}</div>`
+      : `<div class="mat-locs none">Nessuna tua base lo produce o lo vende</div>`;
+    return `
+      <label class="matline ${done?'done':''}">
+        <input type="checkbox" ${done?'checked':''} onchange="toggleMat('${key}','${m.name.replace(/'/g,"\\'")}')">
+        <div>
+          <span class="mat-name">${esc(m.name)}</span><span class="mat-qty">${totalQty}x</span>
+          ${locsHtml}
+        </div>
+      </label>
+    `;
+  }).join('');
 }
 
 function locMatches(loc, q){
